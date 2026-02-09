@@ -1,0 +1,13 @@
+package com.itexpert.jclient.models;
+
+import lombok.Data;
+
+@Data
+public class UserLicense {
+
+    private String email;
+
+    private String firstName;
+    private String lastName;
+
+}
