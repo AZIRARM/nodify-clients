@@ -1,72 +1,59 @@
 package com.itexpert.jclient;
 
-import java.util.function.Consumer;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import com.itexpert.jclient.models.Node;
+import com.itexpert.jclient.flow.NodeExistenceFlow;
+import com.itexpert.jclient.http.NodifyWebClient;
 
 public class NodifyClient {
-    private String url;
-    private String apiKey;
-    private boolean exists = false;
-    private Node node;
 
-    // Private constructor to enforce the builder pattern
-    private NodifyClient(String url, String apiKey) {
-        this.url = url;
-        this.apiKey = apiKey;
+    private final String baseUrl;
+    private final String apiKey;
+    private final WebClient webClient;
+    private final NodifyWebClient nodifyWebClient;
+
+    private NodifyClient(Builder builder) {
+        this.baseUrl = builder.baseUrl;
+        this.apiKey = builder.apiKey;
+
+        this.webClient = WebClient.builder()
+                .baseUrl(baseUrl)
+                .defaultHeader("Authorization", "Bearer " + apiKey)
+                .build();
+
+        this.nodifyWebClient = new NodifyWebClient(webClient);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    // Entry point fluent API
+    public NodeExistenceFlow checkIfNodeExist(String nodeCode) {
+        return new NodeExistenceFlow(nodeCode, nodifyWebClient);
+    }
+
+    // ===== BUILDER =====
     public static class Builder {
-        private String url;
+
+        private String baseUrl;
         private String apiKey;
 
-        public Builder setUrl(String url) {
-            this.url = url;
+        public Builder baseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
             return this;
         }
 
-        public Builder setApiKey(String apiKey) {
+        public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
             return this;
         }
 
         public NodifyClient build() {
-            if (url == null || apiKey == null) {
-                throw new IllegalArgumentException("URL and API key must be provided");
+            if (baseUrl == null || apiKey == null) {
+                throw new IllegalStateException("baseUrl and apiKey are required");
             }
-            return new NodifyClient(url, apiKey);
+            return new NodifyClient(this);
         }
-    }
-
-    public NodifyClient checkIfNodeExist(String codeNode) {
-        // Simulate checking if node exists
-        this.exists = true; // Replace with actual API call to check existence
-        return this;
-    }
-
-    public NodifyClient ifExists(Consumer<Node> action) {
-        if (exists) {
-            action.accept(node);
-        }
-        return this;
-    }
-
-    public NodifyClient ifNotExists(Runnable action) {
-        if (!exists) {
-            action.run();
-        }
-        return this;
-    }
-
-    public NodifyClient save() {
-        // Simulate saving node
-        System.out.println("Node saved");
-        return this;
-    }
-
-    public NodifyClient publish() {
-        // Simulate publishing node
-        System.out.println("Node published");
-        return this;
     }
 }
