@@ -50,7 +50,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For issues and questions:
 - GitHub Issues: [https://github.com/your-repo/nodify-clients/issues](https://github.com/your-repo/nodify-clients/issues)
-- Wiki: [https://github.com/AZIRARM/nodify/wiki]([https://docs.nodify-cms.com](https://github.com/AZIRARM/nodify/wiki))
+- Wiki: [https://github.com/AZIRARM/nodify/wiki](https://github.com/AZIRARM/nodify/wiki)
 
 ---
 
