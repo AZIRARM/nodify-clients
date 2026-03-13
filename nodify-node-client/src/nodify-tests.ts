@@ -7,7 +7,7 @@ async function createAndUseClient() {
   try {
     // 1. Création du client
     const client = NodifyClient.builder()
-      .withBaseUrl('http://localhost:8080')
+      .withBaseUrl('https://nodify-core.azirar.ovh')
       .withTimeout(15000)
       .withHeader('X-Custom-Header', 'valeur')
       .withAuthErrorHandler(async () => {
@@ -19,7 +19,7 @@ async function createAndUseClient() {
       .build();
 
     // 2. Authentification
-    const authResponse = await client.login('admin@example.com', 'password123');
+    const authResponse = await client.login('admin', 'Admin13579++');
     console.log('Authentifié avec token:', authResponse.token?.substring(0, 20) + '...');
 
     // 3. Vérification de la santé
