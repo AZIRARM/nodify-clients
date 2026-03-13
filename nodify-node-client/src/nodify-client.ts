@@ -1,4 +1,4 @@
-
+import { NodifyClientBuilder } from './authentication/nodify-authentication';
 import {
   NodifyClientConfig,
   Plugin,
@@ -44,12 +44,12 @@ export class NodifyClient {
     return new NodifyClientBuilder();
   }
 
-  // Méthodes d'authentification
+  // ============ Authentication Methods ============
   async login(email: string, password: string): Promise<AuthResponse> {
     const response = await this.request<AuthResponse>('/authentication/login', {
       method: 'POST',
       body: JSON.stringify({ email, password })
-    }, false); // Pas besoin de token pour le login
+    }, false); // No token needed for login
 
     if (response.token) {
       this.authToken = response.token;
@@ -103,7 +103,7 @@ export class NodifyClient {
 
       clearTimeout(timeoutId);
 
-      // Gestion des erreurs d'authentification
+      // Handle authentication errors
       if (response.status === 401 && retryOnAuthError && this.config.onAuthError) {
         if (!this.refreshPromise) {
           this.refreshPromise = this.config.onAuthError();
@@ -114,7 +114,7 @@ export class NodifyClient {
 
         if (newToken) {
           this.authToken = newToken;
-          // Retry la requête avec le nouveau token
+          // Retry the request with the new token
           return this.request<T>(endpoint, options, false);
         }
       }
@@ -131,18 +131,21 @@ export class NodifyClient {
         return {} as T;
       }
 
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
+      // Auto-detect content type
+      const contentType = response.headers.get('content-type') || '';
+
+      if (contentType.includes('application/json')) {
         return await response.json();
       }
-
-      if (contentType && contentType.includes('text/plain')) {
+      
+      if (contentType.includes('text/plain')) {
         return await response.text() as unknown as T;
       }
 
-      // Pour les fichiers binaires
+      // For binary files (exports, etc.)
       const arrayBuffer = await response.arrayBuffer();
       return new Uint8Array(arrayBuffer) as unknown as T;
+
     } catch (error) {
       clearTimeout(timeoutId);
       
@@ -522,12 +525,6 @@ export class NodifyClient {
     });
   }
 
-  async checkSlugExists(code: string, slug: string): Promise<boolean> {
-    return this.request<boolean>(`/v0/nodes/code/${code}/slug/${slug}/exists`, {
-      method: 'GET'
-    });
-  }
-
   async hasContents(code: string): Promise<boolean> {
     return this.request<boolean>(`/v0/nodes/code/${code}/haveContents`, {
       method: 'GET'
@@ -841,7 +838,7 @@ export class NodifyClient {
     });
   }
 
-    async activateContentNode(code: string): Promise<boolean> {
+  async activateContentNode(code: string): Promise<boolean> {
     return this.request<boolean>(`/v0/content-node/code/${code}/activate`, {
       method: 'POST'
     });
@@ -965,12 +962,6 @@ export class NodifyClient {
 
   async getChartsByNodeCode(code: string): Promise<ContentDisplayCharts[]> {
     return this.request<ContentDisplayCharts[]>(`/v0/content-displays/charts/node/${code}`, {
-      method: 'GET'
-    });
-  }
-
-  async getChartsByContentCode(code: string): Promise<ContentDisplayCharts[]> {
-    return this.request<ContentDisplayCharts[]>(`/v0/content-displays/charts/content/${code}`, {
       method: 'GET'
     });
   }

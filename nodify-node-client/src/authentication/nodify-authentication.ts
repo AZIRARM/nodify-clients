@@ -1,6 +1,7 @@
 // builder.ts
 
 import { NodifyClientConfig } from '../models/nodify-models';
+import { NodifyClient } from '../nodify-client';
 
 export class NodifyClientBuilder {
   private config: Partial<NodifyClientConfig> = {
