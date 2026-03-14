@@ -1,5 +1,5 @@
 // NodifyReactiveExample.java
-package com.itexpert.content.client.example;
+package com.example;
 
 import com.itexpert.content.client.ReactiveNodifyClient;
 import com.itexpert.content.lib.enums.ContentTypeEnum;
@@ -21,7 +21,7 @@ public class NodifyReactiveExample {
         // Create reactive client
         ReactiveNodifyClient client = ReactiveNodifyClient.create(
                 ReactiveNodifyClient.builder()
-                        .withBaseUrl("http://localhost:8080")
+                        .withBaseUrl("https://nodify-core.azirar.ovh")
                         .withTimeout(30000)
                         .build()
         );
@@ -92,7 +92,7 @@ public class NodifyReactiveExample {
      */
     private static Mono<Node> createParentNode(ReactiveNodifyClient client) {
         Node parentNode = new Node();
-        parentNode.setName("My English Website");
+        parentNode.setName("My English Website written with Java");
         parentNode.setCode("SITE-EN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         parentNode.setSlug("my-english-website");
         parentNode.setEnvironmentCode("production");
