@@ -1,0 +1,15 @@
+{
+  "name": "nodify/php-client",
+  "description": "Nodify API PHP Client",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "guzzlehttp/guzzle": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nodify\\": "src/Nodify/"
+    }
+  }
+}
