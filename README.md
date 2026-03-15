@@ -9,6 +9,7 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 | **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/com.itexpert/nodify-client)](https://mvnrepository.com/artifact/com.itexpert/nodify-client) |
 | **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/nodify-node-client)](https://www.npmjs.com/package/nodify-node-client) |
 | **Python** | ✅ Stable | [![PyPI](https://img.shields.io/pypi/v/nodify-python-client)](https://pypi.org/project/nodify-python-client/) |
+| **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
 
 > **Note**: Kotlin developers can use the Java client directly with full interoperability.
 
@@ -50,6 +51,17 @@ pip install nodify-python-client
 git clone https://github.com/AZIRARM/nodify-clients.git
 cd nodify-clients/python
 pip install -e .
+```
+
+### PHP
+```bash
+# Install using Composer
+composer require nodify/php-client
+
+# Or install in development mode
+git clone https://github.com/AZIRARM/nodify-clients.git
+cd nodify-clients/php
+composer install
 ```
 
 ## 🔧 Quick Start
@@ -171,6 +183,34 @@ async def quick_start():
 asyncio.run(quick_start())
 ```
 
+### PHP Example
+```php
+<?php
+
+require_once 'vendor/autoload.php';
+
+use Nodify\Client;
+use Nodify\Node;
+use Nodify\StatusEnum;
+
+$client = Client::create(
+    Client::builder()
+        ->withBaseUrl('https://nodify-core.azirar.ovh')
+        ->build()
+);
+
+$auth = $client->login('admin', 'Admin13579++');
+
+$node = new Node();
+$node->name = "My Website written with PHP";
+$node->code = "SITE-EN-PHP";
+$node->type = "SITE";
+$node->status = StatusEnum::SNAPSHOT;
+
+$saved = $client->saveNode($node);
+echo "Node created: " . $saved->code . "\n";
+```
+
 ## ✨ Key Features
 
 - **🔐 Authentication** - Secure JWT token management
@@ -252,6 +292,19 @@ async def create_complete_scenario(client):
     content = await create_user_name_value(client, content)
     await publish_content(client, content.code)
     await publish_node(client, parent.code)
+```
+
+### PHP
+```php
+function createCompleteScenario($client) {
+    $parent = createParentNode($client);
+    $child = createChildNode($client, $parent->code);
+    $content = createHtmlContent($client, $child->code);
+    $content = createTranslations($client, $content);
+    $content = createUserNameValue($client, $content);
+    publishContent($client, $content->code);
+    publishNode($client, $parent->code);
+}
 ```
 
 ## 📖 Documentation
