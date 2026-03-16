@@ -8,7 +8,7 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 |----------|--------|---------|
 | **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/com.itexpert/nodify-client)](https://mvnrepository.com/artifact/com.itexpert/nodify-client) |
 | **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/nodify-node-client)](https://www.npmjs.com/package/nodify-node-client) |
-| **Python** | ✅ Stable | [![PyPI](https://img.shields.io/pypi/v/nodify-python-client)](https://pypi.org/project/nodify-python-client/) |
+| **Python** | ✅ Stable | [![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) |
 | **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
 
 > **Note**: Kotlin developers can use the Java client directly with full interoperability.
