@@ -1,13 +1,13 @@
 // NodifyReactiveExample.java
 package com.example;
 
-import com.itexpert.content.client.ReactiveNodifyClient;
-import com.itexpert.content.lib.enums.ContentTypeEnum;
-import com.itexpert.content.lib.enums.StatusEnum;
-import com.itexpert.content.lib.models.ContentNode;
-import com.itexpert.content.lib.models.Node;
-import com.itexpert.content.lib.models.Translation;
-import com.itexpert.content.lib.models.Value;
+import io.github.AZIRARM.content.client.ReactiveNodifyClient;
+import io.github.AZIRARM.content.lib.enums.ContentTypeEnum;
+import io.github.AZIRARM.content.lib.enums.StatusEnum;
+import io.github.AZIRARM.content.lib.models.ContentNode;
+import io.github.AZIRARM.content.lib.models.Node;
+import io.github.AZIRARM.content.lib.models.Translation;
+import io.github.AZIRARM.content.lib.models.Value;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

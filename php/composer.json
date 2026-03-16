@@ -1,6 +1,6 @@
 {
   "name": "nodify/php-client",
-  "description": "Nodify API PHP Client",
+  "description": "Nodify PHP Client for Nodify Headless CMS",
   "type": "library",
   "license": "MIT",
   "require": {
