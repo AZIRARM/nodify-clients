@@ -2,7 +2,7 @@
 
 **Official Java client for Nodify Headless CMS**
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.AZIRARM/nodify-java-client.svg)](https://central.sonatype.com/artifact/io.github.AZIRARM/nodify-java-client)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client.svg)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful reactive Java client built with Project Reactor to interact with your Nodify instance, enabling you to manage content, nodes, translations, and more programmatically.
@@ -144,7 +144,7 @@ Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>io.github.AZIRARM</groupId>
+    <groupId>io.github.azirarm</groupId>
     <artifactId>nodify-java-client</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -153,13 +153,13 @@ Add the following dependency to your `pom.xml`:
 ### Gradle
 
 ```groovy
-implementation 'io.github.AZIRARM:nodify-java-client:1.0.0'
+implementation 'io.github.azirarm:nodify-java-client:1.0.0'
 ```
 
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("io.github.AZIRARM:nodify-java-client:1.0.0")
+implementation("io.github.azirarm:nodify-java-client:1.0.0")
 ```
 
 ## 🚀 Quick Start
@@ -167,9 +167,9 @@ implementation("io.github.AZIRARM:nodify-java-client:1.0.0")
 Here's a simple example to get you started:
 
 ```java
-import com.itexpert.content.client.ReactiveNodifyClient;
-import com.itexpert.content.lib.models.Node;
-import com.itexpert.content.lib.enums.StatusEnum;
+import io.github.azirarm.nodify.client.ReactiveNodifyClient;
+import io.github.azirarm.nodify.models.Node;
+import io.github.azirarm.nodify.enums.StatusEnum;
 import reactor.core.publisher.Mono;
 
 public class QuickStart {
@@ -237,30 +237,30 @@ Nodify supports powerful directives within your content strings:
 This example demonstrates creating a parent node, a child page, and an HTML content node with translations and a dynamic value.
 
 ```java
-import com.itexpert.content.client.ReactiveNodifyClient;
-import com.itexpert.content.lib.enums.ContentTypeEnum;
-import com.itexpert.content.lib.enums.StatusEnum;
-import com.itexpert.content.lib.models.*;
+import io.github.azirarm.nodify.client.ReactiveNodifyClient;
+import io.github.azirarm.nodify.enums.ContentTypeEnum;
+import io.github.azirarm.nodify.enums.StatusEnum;
+import io.github.azirarm.nodify.models.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 public class CompleteScenario {
-    
+
     public static void main(String[] args) {
         ReactiveNodifyClient client = ReactiveNodifyClient.create(
-            ReactiveNodifyClient.builder()
-                .withBaseUrl("http://localhost:7804")
-                .build()
+                ReactiveNodifyClient.builder()
+                        .withBaseUrl("http://localhost:7804")
+                        .build()
         );
 
         client.login("admin", "Admin123")
-            .flatMap(auth -> createCompleteScenario(client))
-            .subscribe(
-                result -> System.out.println("✅ Scenario completed successfully!"),
-                error -> System.err.println("❌ Error: " + error.getMessage())
-            );
+                .flatMap(auth -> createCompleteScenario(client))
+                .subscribe(
+                        result -> System.out.println("✅ Scenario completed successfully!"),
+                        error -> System.err.println("❌ Error: " + error.getMessage())
+                );
 
         // Keep the application running
         try {
@@ -273,42 +273,42 @@ public class CompleteScenario {
     private static Mono<Void> createCompleteScenario(ReactiveNodifyClient client) {
         // 1. Create a parent node (e.g., your website)
         return createParentNode(client)
-            .flatMap(parentNode -> {
-                System.out.println("✅ Parent node created: " + parentNode.getName());
+                .flatMap(parentNode -> {
+                    System.out.println("✅ Parent node created: " + parentNode.getName());
 
-                // 2. Create a child page node under the website
-                return createChildNode(client, parentNode.getCode())
-                    .flatMap(childNode -> {
-                        System.out.println("✅ Child node created: " + childNode.getName());
+                    // 2. Create a child page node under the website
+                    return createChildNode(client, parentNode.getCode())
+                            .flatMap(childNode -> {
+                                System.out.println("✅ Child node created: " + childNode.getName());
 
-                        // 3. Create HTML content with translations and values
-                        return createHtmlContent(client, childNode.getCode())
-                            .flatMap(contentNode -> {
-                                // 4. Add translations
-                                return addTranslations(client, contentNode)
-                                    // 5. Add user name value
-                                    .flatMap(nodeWithTranslations -> addUserNameValue(client, nodeWithTranslations))
-                                    .flatMap(finalContent -> {
-                                        System.out.println("✅ HTML content created with translations and values");
+                                // 3. Create HTML content with translations and values
+                                return createHtmlContent(client, childNode.getCode())
+                                        .flatMap(contentNode -> {
+                                            // 4. Add translations
+                                            return addTranslations(client, contentNode)
+                                                    // 5. Add user name value
+                                                    .flatMap(nodeWithTranslations -> addUserNameValue(client, nodeWithTranslations))
+                                                    .flatMap(finalContent -> {
+                                                        System.out.println("✅ HTML content created with translations and values");
 
-                                        // 6. Publish the content
-                                        return publishContent(client, finalContent.getCode())
-                                            .flatMap(published -> {
-                                                System.out.println("✅ Content published");
+                                                        // 6. Publish the content
+                                                        return publishContent(client, finalContent.getCode())
+                                                                .flatMap(published -> {
+                                                                    System.out.println("✅ Content published");
 
-                                                // 7. Publish the parent node
-                                                return publishNode(client, parentNode.getCode())
-                                                    .map(publishedNode -> {
-                                                        System.out.println("✅ Parent node published");
-                                                        displayFinalInfo(parentNode, childNode, finalContent);
-                                                        return publishedNode;
+                                                                    // 7. Publish the parent node
+                                                                    return publishNode(client, parentNode.getCode())
+                                                                            .map(publishedNode -> {
+                                                                                System.out.println("✅ Parent node published");
+                                                                                displayFinalInfo(parentNode, childNode, finalContent);
+                                                                                return publishedNode;
+                                                                            });
+                                                                });
                                                     });
-                                            });
-                                    });
+                                        });
                             });
-                    });
-            })
-            .then();
+                })
+                .then();
     }
 
     private static Mono<Node> createParentNode(ReactiveNodifyClient client) {
@@ -320,7 +320,7 @@ public class CompleteScenario {
         parentNode.setStatus(StatusEnum.SNAPSHOT);
         parentNode.setDefaultLanguage("en");
         parentNode.setEnvironmentCode("production");
-        
+
         return client.saveNode(parentNode);
     }
 
@@ -334,7 +334,7 @@ public class CompleteScenario {
         childNode.setStatus(StatusEnum.SNAPSHOT);
         childNode.setDefaultLanguage("en");
         childNode.setEnvironmentCode("production");
-        
+
         return client.saveNode(childNode);
     }
 
@@ -349,10 +349,10 @@ public class CompleteScenario {
         contentNode.setStatus(StatusEnum.SNAPSHOT);
         contentNode.setEnvironmentCode("production");
         contentNode.setContent(
-            "<h1>$translate(GREETING), $value(USER_NAME)!</h1>\n" +
-            "<p>Welcome to your Nodify site built with Java.</p>"
+                "<h1>$translate(GREETING), $value(USER_NAME)!</h1>\n" +
+                        "<p>Welcome to your Nodify site built with Java.</p>"
         );
-        
+
         return client.saveContentNode(contentNode);
     }
 
@@ -361,19 +361,19 @@ public class CompleteScenario {
         enGreeting.setKey("GREETING");
         enGreeting.setLanguage("en");
         enGreeting.setValue("Hello");
-        
+
         Translation frGreeting = new Translation();
         frGreeting.setKey("GREETING");
         frGreeting.setLanguage("fr");
         frGreeting.setValue("Bonjour");
-        
+
         Translation esGreeting = new Translation();
         esGreeting.setKey("GREETING");
         esGreeting.setLanguage("es");
         esGreeting.setValue("Hola");
-        
+
         contentNode.setTranslations(Arrays.asList(enGreeting, frGreeting, esGreeting));
-        
+
         return client.saveContentNode(contentNode);
     }
 
@@ -381,9 +381,9 @@ public class CompleteScenario {
         Value userNameValue = new Value();
         userNameValue.setKey("USER_NAME");
         userNameValue.setValue("Java Developer");
-        
+
         contentNode.setValues(Arrays.asList(userNameValue));
-        
+
         return client.saveContentNode(contentNode);
     }
 
@@ -399,34 +399,34 @@ public class CompleteScenario {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("🎯 FINAL SCENARIO SUMMARY");
         System.out.println("=".repeat(60));
-        
+
         System.out.println("\n📁 PARENT NODE:");
         System.out.println("   - Name: " + parentNode.getName());
         System.out.println("   - Code: " + parentNode.getCode());
-        
+
         System.out.println("\n📄 CHILD NODE:");
         System.out.println("   - Name: " + childNode.getName());
         System.out.println("   - Code: " + childNode.getCode());
         System.out.println("   - Parent: " + childNode.getParentCode());
-        
+
         System.out.println("\n📝 CONTENT NODE:");
         System.out.println("   - Code: " + contentNode.getCode());
         System.out.println("   - Title: " + contentNode.getTitle());
-        
+
         System.out.println("\n🌍 TRANSLATIONS:");
         if (contentNode.getTranslations() != null) {
-            contentNode.getTranslations().forEach(t -> 
-                System.out.println("   - " + t.getKey() + " [" + t.getLanguage() + "]: " + t.getValue())
+            contentNode.getTranslations().forEach(t ->
+                    System.out.println("   - " + t.getKey() + " [" + t.getLanguage() + "]: " + t.getValue())
             );
         }
-        
+
         System.out.println("\n🔢 VALUES:");
         if (contentNode.getValues() != null) {
-            contentNode.getValues().forEach(v -> 
-                System.out.println("   - " + v.getKey() + ": " + v.getValue())
+            contentNode.getValues().forEach(v ->
+                    System.out.println("   - " + v.getKey() + ": " + v.getValue())
             );
         }
-        
+
         System.out.println("\n" + "=".repeat(60));
     }
 }
@@ -494,12 +494,12 @@ The client provides methods for all Nodify API endpoints, organized by resource:
 
 ```java
 ReactiveNodifyClient client = ReactiveNodifyClient.create(
-    ReactiveNodifyClient.builder()
-        .withBaseUrl("https://your-nodify-instance.com")
-        .withTimeout(30000)                    // Timeout in milliseconds
-        .withAuthToken("your-jwt-token")       // Optional: pre-authenticated token
-        .withHeader("X-Custom-Header", "value") // Custom headers
-        .build()
+        ReactiveNodifyClient.builder()
+                .withBaseUrl("https://your-nodify-instance.com")
+                .withTimeout(30000)                    // Timeout in milliseconds
+                .withAuthToken("your-jwt-token")       // Optional: pre-authenticated token
+                .withHeader("X-Custom-Header", "value") // Custom headers
+                .build()
 );
 ```
 
