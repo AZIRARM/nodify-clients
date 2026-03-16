@@ -10,7 +10,6 @@ Node.js ✅ Stable https://img.shields.io/npm/v/@azirarm/nodify-node-client
 Python ✅ Stable https://img.shields.io/pypi/v/nodify-python-client.svg
 PHP ✅ Stable https://img.shields.io/packagist/v/nodify/php-client
 
-
 > **Note**: Kotlin developers can use the Java client directly with full interoperability.
 
 ## 📦 Installation
