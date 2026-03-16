@@ -1,8 +1,14 @@
 {
   "name": "nodify/php-client",
-  "description": "Nodify PHP Client for Nodify Headless CMS",
+  "description": "Official PHP client for Nodify Headless CMS",
   "type": "library",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "AZIRARM",
+      "email": "azirarm@gmail.com"
+    }
+  ],
   "require": {
     "php": ">=8.0",
     "guzzlehttp/guzzle": "^7.0"
@@ -11,5 +17,7 @@
     "psr-4": {
       "Nodify\\": "src/Nodify/"
     }
-  }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
