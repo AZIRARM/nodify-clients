@@ -6,8 +6,8 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 
 | Language | Status | Package |
 |----------|--------|---------|
-| **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/com.itexpert/nodify-client)](https://mvnrepository.com/artifact/com.itexpert/nodify-client) |
-| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/nodify-node-client)](https://www.npmjs.com/package/nodify-node-client) |
+| **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client) |
+| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) |
 | **Python** | ✅ Stable | [![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) |
 | **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
 
@@ -18,28 +18,28 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 ### Java (Maven)
 ```xml
 <dependency>
-    <groupId>com.itexpert</groupId>
-    <artifactId>nodify-client</artifactId>
+    <groupId>io.github.azirarm</groupId>
+    <artifactId>nodify-java-client</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
 
 ### Java (Gradle)
 ```gradle
-implementation 'com.itexpert:nodify-client:1.0.0'
+implementation 'io.github.azirarm:nodify-java-client:1.0.0'
 ```
 
 ### Kotlin (using Java client)
 ```kotlin
 // In build.gradle.kts
 dependencies {
-    implementation("com.itexpert:nodify-client:1.0.0")
+    implementation("io.github.azirarm:nodify-java-client:1.0.0")
 }
 ```
 
 ### Node.js
 ```bash
-npm install nodify-node-client
+npm install @azirarm/nodify-node-client
 ```
 
 ### Python
@@ -64,15 +64,15 @@ cd nodify-php-client
 composer install
 ```
 
-> **Note**: The PHP client is now maintained in its own repository at [https://github.com/AZIRARM/nodify-php-client](https://github.com/AZIRARM/nodify-php-client)
+> **Note**: The PHP client is maintained in its own repository at [https://github.com/AZIRARM/nodify-php-client](https://github.com/AZIRARM/nodify-php-client)
 
 ## 🔧 Quick Start
 
 ### Java Example
 ```java
-import com.itexpert.content.client.ReactiveNodifyClient;
-import com.itexpert.content.lib.models.Node;
-import com.itexpert.content.lib.enums.StatusEnum;
+import io.github.azirarm.nodify.client.ReactiveNodifyClient;
+import io.github.azirarm.nodify.models.Node;
+import io.github.azirarm.nodify.enums.StatusEnum;
 
 public class QuickStart {
     public static void main(String[] args) {
@@ -101,9 +101,9 @@ public class QuickStart {
 
 ### Kotlin Example (using Java client)
 ```kotlin
-import com.itexpert.content.client.ReactiveNodifyClient
-import com.itexpert.content.lib.models.Node
-import com.itexpert.content.lib.enums.StatusEnum
+import io.github.azirarm.nodify.client.ReactiveNodifyClient
+import io.github.azirarm.nodify.models.Node
+import io.github.azirarm.nodify.enums.StatusEnum
 
 fun main() {
     val client = ReactiveNodifyClient.create(
@@ -131,7 +131,7 @@ fun main() {
 
 ### Node.js Example
 ```typescript
-import { NodifyClient, Node } from 'nodify-node-client';
+import { NodifyClient, Node } from '@azirarm/nodify-node-client';
 
 async function quickStart() {
     const client = NodifyClient.builder()
