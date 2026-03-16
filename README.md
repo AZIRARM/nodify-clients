@@ -58,11 +58,13 @@ pip install -e .
 # Install using Composer
 composer require nodify/php-client
 
-# Or install in development mode
-git clone https://github.com/AZIRARM/nodify-clients.git
-cd nodify-clients/php
+# Or install in development mode (from the dedicated repository)
+git clone https://github.com/AZIRARM/nodify-php-client.git
+cd nodify-php-client
 composer install
 ```
+
+> **Note**: The PHP client is now maintained in its own repository at [https://github.com/AZIRARM/nodify-php-client](https://github.com/AZIRARM/nodify-php-client)
 
 ## 🔧 Quick Start
 
