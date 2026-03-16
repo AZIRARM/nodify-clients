@@ -4,12 +4,13 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 
 ## 🚀 Available Clients
 
-| Language | Status | Package |
-|----------|--------|---------|
-| **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client) |
-| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) |
-| **Python** | ✅ Stable | [![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) |
-| **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
+Language Status Package
+Java ✅ Stable https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client
+Node.js ✅ Stable https://img.shields.io/npm/v/@azirarm/nodify-node-client
+Python ✅ Stable https://img.shields.io/pypi/v/nodify-python-client.svg
+PHP ✅ Stable https://img.shields.io/packagist/v/nodify/php-client
+
+Note: Kotlin developers can use the Java client directly with full interoperability.
 
 > **Note**: Kotlin developers can use the Java client directly with full interoperability.
 
