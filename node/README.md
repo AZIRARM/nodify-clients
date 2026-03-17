@@ -2,7 +2,7 @@
 
 **Official Node.js client for Nodify Headless CMS**
 
-[![npm version](https://img.shields.io/npm/v/nodify-node-client.svg)]((https://www.npmjs.com/package/nodify-node-client)
+[![npm version](https://img.shields.io/npm/v/nodify-node-client.svg)](https://www.npmjs.com/package/nodify-node-client)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 A powerful and flexible TypeScript client to interact with your Nodify instance, enabling you to manage content, nodes, translations, and more programmatically.
