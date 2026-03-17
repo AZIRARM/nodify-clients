@@ -7,7 +7,7 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 | Language | Status | Package |
 |----------|--------|---------|
 | **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client) |
-| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) |
+| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/nodify-node-client)](https://www.npmjs.com/package/nodify-node-client) |
 | **Python** | ✅ Stable | [![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) |
 | **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
 
