@@ -1,51 +1,15 @@
-☕ Java (Maven Central)
-
-```markdown
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client) • [![Java Version](https://img.shields.io/badge/Java-8%2B-blue)](https://adoptium.net) • [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-```
-
-https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client • https://img.shields.io/badge/Java-8%2B-blue • https://img.shields.io/badge/License-MIT-yellow.svg
-
----
-
-📘 Node.js (npm)
-
-```markdown
-[![npm](https://img.shields.io/npm/v/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) • [![npm downloads](https://img.shields.io/npm/dm/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) • [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-```
-
-https://img.shields.io/npm/v/@azirarm/nodify-node-client • https://img.shields.io/npm/dm/@azirarm/nodify-node-client • https://img.shields.io/badge/License-MIT-yellow.svg
-
----
-
-🐍 Python (PyPI)
-
-```markdown
-[![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) • [![Python versions](https://img.shields.io/pypi/pyversions/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) • [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-```
-
-https://img.shields.io/pypi/v/nodify-python-client.svg • https://img.shields.io/pypi/pyversions/nodify-python-client.svg • https://img.shields.io/badge/License-MIT-yellow.svg
-
----
-
-🐘 PHP (Packagist)
-
-```markdown
-[![Packagist Version](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) • [![PHP Version Require](https://img.shields.io/packagist/php-v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) • [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-```
-
-https://img.shields.io/packagist/v/nodify/php-client • https://img.shields.io/packagist/php-v/nodify/php-client • https://img.shields.io/badge/License-MIT-yellow.svg
 # Nodify Clients
 
 Official Nodify API clients for multiple programming languages. Nodify is a powerful content management system that enables dynamic content delivery with built-in translation and personalization features.
 
 ## 🚀 Available Clients
 
-Language Status Package
-Java ✅ Stable https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client
-Node.js ✅ Stable https://img.shields.io/npm/v/@azirarm/nodify-node-client
-Python ✅ Stable https://img.shields.io/pypi/v/nodify-python-client.svg
-PHP ✅ Stable https://img.shields.io/packagist/v/nodify/php-client
+| Language | Status | Package |
+|----------|--------|---------|
+| **Java** | ✅ Stable | [![Maven Central](https://img.shields.io/maven-central/v/io.github.azirarm/nodify-java-client)](https://central.sonatype.com/artifact/io.github.azirarm/nodify-java-client) |
+| **Node.js** | ✅ Stable | [![npm](https://img.shields.io/npm/v/@azirarm/nodify-node-client)](https://www.npmjs.com/package/@azirarm/nodify-node-client) |
+| **Python** | ✅ Stable | [![PyPI version](https://img.shields.io/pypi/v/nodify-python-client.svg)](https://pypi.org/project/nodify-python-client/) |
+| **PHP** | ✅ Stable | [![Packagist](https://img.shields.io/packagist/v/nodify/php-client)](https://packagist.org/packages/nodify/php-client) |
 
 > **Note**: Kotlin developers can use the Java client directly with full interoperability.
 
