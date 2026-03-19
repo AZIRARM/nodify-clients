@@ -22,8 +22,6 @@ public class Node implements Serializable, Cloneable {
 
     private String slug;
 
-    private String environmentCode;
-
     private String description;
 
     private String defaultLanguage;

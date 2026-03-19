@@ -1,5 +1,5 @@
 // exceptions/ReactiveNodifyClientException.java
-package io.github.azirarm.content.client.exceptions;
+package io.github.azirarm.content.lib.exceptions;
 
 public class ReactiveNodifyClientException extends RuntimeException {
     private final int statusCode;

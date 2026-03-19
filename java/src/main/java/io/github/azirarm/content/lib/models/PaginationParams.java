@@ -1,5 +1,5 @@
 // params/PaginationParams.java
-package io.github.azirarm.content.client.models;
+package io.github.azirarm.content.lib.models;
 
 public class PaginationParams {
     private Integer currentPage;
