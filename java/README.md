@@ -146,20 +146,20 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.azirarm</groupId>
     <artifactId>nodify-java-client</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'io.github.azirarm:nodify-java-client:1.0.0'
+implementation 'io.github.azirarm:nodify-java-client:1.1.0'
 ```
 
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("io.github.azirarm:nodify-java-client:1.0.0")
+implementation("io.github.azirarm:nodify-java-client:1.1.0")
 ```
 
 ## 🚀 Quick Start
@@ -167,7 +167,7 @@ implementation("io.github.azirarm:nodify-java-client:1.0.0")
 Here's a simple example to get you started:
 
 ```java
-import io.github.azirarm.nodify.client.ReactiveNodifyClient;
+import io.github.azirarm.content.client.ReactiveNodifyClient;
 import io.github.azirarm.nodify.models.Node;
 import io.github.azirarm.nodify.enums.StatusEnum;
 import reactor.core.publisher.Mono;

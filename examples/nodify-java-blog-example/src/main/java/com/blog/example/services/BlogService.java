@@ -14,8 +14,10 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service class for blog operations using Nodify client
+ */
 public class BlogService {
     private final ReactiveNodifyClient client;
     private final String blogSiteCode;
@@ -26,12 +28,15 @@ public class BlogService {
         this.blogSiteCode = blogSiteCode;
     }
 
+    /**
+     * Create a new blog post (can be HTML, JSON, STYLE, SCRIPT, etc.)
+     */
     public Mono<BlogPost> createBlogPost(BlogPost post) {
         System.out.println("\n📝 Creating post: " + post.title());
 
         ContentNode node = new ContentNode();
         node.setParentCode(blogSiteCode);
-        node.setType(ContentTypeEnum.HTML);
+        node.setType(post.type() != null ? post.type() : ContentTypeEnum.HTML);
         node.setTitle(post.title());
         node.setCode(generatePostCode(post.title()));
         node.setSlug(post.slug());
@@ -55,6 +60,9 @@ public class BlogService {
                 .doOnError(e -> System.err.println("  ❌ Error saving node: " + e.getMessage()));
     }
 
+    /**
+     * Find all published blog posts
+     */
     public Flux<BlogPost> findAllPublishedPosts() {
         return client.findAllContentNodes()
                 .cast(Object.class)
@@ -66,6 +74,9 @@ public class BlogService {
                 .filter(BlogPost::published);
     }
 
+    /**
+     * Find a blog post by its code
+     */
     public Mono<BlogPost> findBlogPostByCode(String code) {
         return client.findContentNodeByCodeAndStatus(code, "PUBLISHED")
                 .map(this::toContentNode)
@@ -73,6 +84,18 @@ public class BlogService {
                 .map(this::toBlogPost);
     }
 
+    /**
+     * Find a content node by its code (raw ContentNode)
+     */
+    public Mono<ContentNode> findContentNodeByCode(String code) {
+        return client.findContentNodeByCodeAndStatus(code, "SNAPSHOT")
+                .map(this::toContentNode)
+                .filter(Objects::nonNull);
+    }
+
+    /**
+     * Publish a blog post
+     */
     public Mono<BlogPost> publishBlogPost(String postCode) {
         System.out.println("\n🚀 Publishing: " + postCode);
         return client.publishContentNode(postCode, true)
@@ -83,6 +106,9 @@ public class BlogService {
                 .doOnError(e -> System.err.println("  ❌ Error publishing: " + e.getMessage()));
     }
 
+    /**
+     * Delete a blog post
+     */
     public Mono<Boolean> deleteBlogPost(String code) {
         System.out.println("\n🗑️ Deleting: " + code);
         return client.deleteContentNode(code)
@@ -96,6 +122,9 @@ public class BlogService {
                 .onErrorReturn(false);
     }
 
+    /**
+     * Add a translation to a blog post
+     */
     public Mono<BlogPost> addTranslation(String postCode, String language,
                                          String translatedTitle, String translatedContent) {
         System.out.println("\n🌍 Adding " + language + " translation to: " + postCode);
@@ -109,11 +138,13 @@ public class BlogService {
                         translations = new ArrayList<>();
                     }
 
+                    // Remove old translations for this language
                     translations.removeIf(t ->
-                            t.getLanguage().equals(language) &&
+                            t.getLanguage().equalsIgnoreCase(language) &&
                                     ("TITLE".equals(t.getKey()) || "CONTENT".equals(t.getKey()))
                     );
 
+                    // Add new translations
                     translations.add(createTranslation("TITLE", language, translatedTitle));
                     translations.add(createTranslation("CONTENT", language, translatedContent));
 
@@ -124,6 +155,40 @@ public class BlogService {
                 .doOnError(e -> System.err.println("  ❌ Error adding translation: " + e.getMessage()));
     }
 
+    /**
+     * Add a translation key to a blog post (for directives like $translate(KEY))
+     */
+    public Mono<BlogPost> addTranslationKey(String postCode, String language,
+                                            String key, String value) {
+        System.out.println("\n🌍 Adding translation key " + key + " for " + language + " to: " + postCode);
+
+        return client.findContentNodeByCodeAndStatus(postCode, "SNAPSHOT")
+                .map(this::toContentNode)
+                .filter(Objects::nonNull)
+                .flatMap(node -> {
+                    List<Translation> translations = node.getTranslations();
+                    if (translations == null) {
+                        translations = new ArrayList<>();
+                    }
+
+                    // Remove old translation for this key and language
+                    translations.removeIf(t ->
+                            t.getLanguage().equalsIgnoreCase(language) && key.equals(t.getKey())
+                    );
+
+                    // Add new translation
+                    translations.add(createTranslation(key, language, value));
+
+                    node.setTranslations(translations);
+                    return client.saveContentNode(node);
+                })
+                .map(this::toBlogPost)
+                .doOnError(e -> System.err.println("  ❌ Error adding translation key: " + e.getMessage()));
+    }
+
+    /**
+     * Convert any object to ContentNode safely
+     */
     private ContentNode toContentNode(Object obj) {
         if (obj == null) return null;
         if (obj instanceof ContentNode node) {
@@ -136,11 +201,15 @@ public class BlogService {
         return null;
     }
 
+    /**
+     * Convert ContentNode to BlogPost
+     */
     private BlogPost toBlogPost(ContentNode node) {
         if (node == null) return null;
 
         Author author = extractAuthor(node.getValues());
 
+        // Display translations if they exist
         if (node.getTranslations() != null && !node.getTranslations().isEmpty()) {
             System.out.println("      🌍 Translations found:");
             for (Translation t : node.getTranslations()) {
@@ -149,21 +218,28 @@ public class BlogService {
             }
         }
 
+        // Determine content type
+        ContentTypeEnum type = node.getType() != null ? node.getType() : ContentTypeEnum.HTML;
+
         return new BlogPost(
                 node.getCode(),
                 node.getTitle(),
                 node.getContent(),
                 node.getDescription() != null ? node.getDescription() : "",
                 author,
-                List.of(),
+                List.of(), // tags could be added later
                 node.getSlug(),
                 node.getLanguage(),
+                type,
                 Instant.ofEpochMilli(node.getCreationDate()),
                 Instant.ofEpochMilli(node.getModificationDate()),
                 StatusEnum.PUBLISHED.equals(node.getStatus())
         );
     }
 
+    /**
+     * Extract author from values
+     */
     private Author extractAuthor(List<Value> values) {
         String name = "Unknown Author";
         String email = "unknown@example.com";
