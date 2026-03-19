@@ -168,8 +168,8 @@ Here's a simple example to get you started:
 
 ```java
 import io.github.azirarm.content.client.ReactiveNodifyClient;
-import io.github.azirarm.nodify.models.Node;
-import io.github.azirarm.nodify.enums.StatusEnum;
+import io.github.azirarm.content.lib.enums.StatusEnum;
+import io.github.azirarm.content.lib.models.Node;
 import reactor.core.publisher.Mono;
 
 public class QuickStart {
@@ -237,10 +237,10 @@ Nodify supports powerful directives within your content strings:
 This example demonstrates creating a parent node, a child page, and an HTML content node with translations and a dynamic value.
 
 ```java
-import io.github.azirarm.nodify.client.ReactiveNodifyClient;
-import io.github.azirarm.nodify.enums.ContentTypeEnum;
-import io.github.azirarm.nodify.enums.StatusEnum;
-import io.github.azirarm.nodify.models.*;
+import io.github.azirarm.content.client.ReactiveNodifyClient;
+import io.github.azirarm.content.lib.enums.ContentTypeEnum;
+import io.github.azirarm.content.lib.enums.StatusEnum;
+import io.github.azirarm.content.lib.models.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;

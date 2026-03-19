@@ -20,20 +20,20 @@ Official Nodify API clients for multiple programming languages. Nodify is a powe
 <dependency>
     <groupId>io.github.azirarm</groupId>
     <artifactId>nodify-java-client</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 ### Java (Gradle)
 ```gradle
-implementation 'io.github.azirarm:nodify-java-client:1.0.0'
+implementation 'io.github.azirarm:nodify-java-client:1.1.0'
 ```
 
 ### Kotlin (using Java client)
 ```kotlin
 // In build.gradle.kts
 dependencies {
-    implementation("io.github.azirarm:nodify-java-client:1.0.0")
+    implementation("io.github.azirarm:nodify-java-client:1.1.0")
 }
 ```
 
@@ -70,9 +70,9 @@ composer install
 
 ### Java Example
 ```java
-import io.github.azirarm.nodify.client.ReactiveNodifyClient;
-import io.github.azirarm.nodify.models.Node;
-import io.github.azirarm.nodify.enums.StatusEnum;
+import io.github.azirarm.content.client.ReactiveNodifyClient;
+import io.github.azirarm.content.lib.enums.StatusEnum;
+import io.github.azirarm.content.lib.models.Node;
 
 public class QuickStart {
     public static void main(String[] args) {
@@ -101,9 +101,9 @@ public class QuickStart {
 
 ### Kotlin Example (using Java client)
 ```kotlin
-import io.github.azirarm.nodify.client.ReactiveNodifyClient
-import io.github.azirarm.nodify.models.Node
-import io.github.azirarm.nodify.enums.StatusEnum
+import io.github.azirarm.content.client.ReactiveNodifyClient
+import io.github.azirarm.content.lib.enums.StatusEnum
+import io.github.azirarm.content.lib.models.Node
 
 fun main() {
     val client = ReactiveNodifyClient.create(
