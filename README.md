@@ -39,7 +39,7 @@ dependencies {
 
 ### Node.js
 ```bash
-npm install @azirarm/nodify-node-client
+npm install nodify-node-client
 ```
 
 ### Python
@@ -131,7 +131,7 @@ fun main() {
 
 ### Node.js Example
 ```typescript
-import { NodifyClient, Node } from '@azirarm/nodify-node-client';
+import { NodifyClient, Node } from 'nodify-node-client';
 
 async function quickStart() {
     const client = NodifyClient.builder()
