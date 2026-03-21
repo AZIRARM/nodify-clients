@@ -1,4 +1,9 @@
-# @azirarm/nodify-node-client
+Parfait ! Je vais vous aider à mettre à jour la documentation README.md pour refléter les dernières modifications et la nouvelle API avec le builder pattern.
+
+## README.md mis à jour
+
+```markdown
+# nodify-node-client
 
 **Official Node.js client for Nodify Headless CMS**
 
@@ -14,11 +19,11 @@ Before using this client, you need access to a **Nodify Headless CMS** instance.
 ### Option 1: Use the Public Demo (For Testing)
 
 You can test the client against the public Nodify demo instance:
-*   **Demo URL the Studio (for data analysts, maketers, ...) :** [Nodify Demo](https://nodify.azirar.ovh) (Check repository for availability)
-*   **Demo URL (for developpers):** [Nodify Demo](https://nodify-core.azirar.ovh) (Check repository for availability)
-*   **Credentials:**
-    *   Username: `admin`
-    *   Password: `Admin13579++`
+- **Studio URL (for content editors):** [Nodify Demo](https://nodify.azirar.ovh)
+- **API URL (for developers):** [Nodify Core](https://nodify-core.azirar.ovh)
+- **Credentials:**
+  - Username: `admin`
+  - Password: `Admin13579++`
 
 > ⚠️ The demo server is a shared environment and may be reset at any time. It is accessible daily, typically from **10:00 AM to 12:00 AM (UTC+1)**.
 
@@ -35,11 +40,11 @@ services:
   nodify-core:
     image: azirar/nodify-core:latest
     environment:
-      MONGO_URL: "mongodb://your-mongo-host:27017/nodify" # Replace with your Mongo URL
-      ADMIN_PWD: "YourAdminPassword"                     # Replace with your admin password
-      API_URL: "http://nodify-api:1080"                   # Internal URL for the API service
+      MONGO_URL: "mongodb://your-mongo-host:27017/nodify"
+      ADMIN_PWD: "YourAdminPassword"
+      API_URL: "http://nodify-api:1080"
       TZ: "${TZ:-Europe/Paris}"
-      REDIS_URL: "redis://your-redis-host:6379"          # Replace with your Redis URL
+      REDIS_URL: "redis://your-redis-host:6379"
       JAVA_OPTS: "-Xmx768m -Xms384m"
     ports:
       - "7804:8080"
@@ -47,9 +52,9 @@ services:
   nodify-api:
     image: azirar/nodify-api:latest
     environment:
-      MONGO_URL: "mongodb://your-mongo-host:27017/nodify" # Replace with your Mongo URL
+      MONGO_URL: "mongodb://your-mongo-host:27017/nodify"
       TZ: "${TZ:-Europe/Paris}"
-      REDIS_URL: "redis://your-redis-host:6379"          # Replace with your Redis URL
+      REDIS_URL: "redis://your-redis-host:6379"
       JAVA_OPTS: "-Xmx512m -Xms256m"
     ports:
       - "7805:1080"
@@ -66,13 +71,6 @@ services:
       API_URL: "http://nodify-api:1080"
 ```
 
-**Explanation of Variables:**
-*   `MONGO_URL`: Connection string for your MongoDB database (e.g., `mongodb://mongo:27017/nodify`).
-*   `REDIS_URL`: Connection string for your Redis instance (e.g., `redis://redis:6379`).
-*   `ADMIN_PWD`: The password you will use to log in as the `admin` user.
-*   `API_URL`: The internal URL for the `nodify-api` service (used by `nodify-core`).
-*   `CORE_URL` / `API_URL` (in `nodify-ui`): The URLs for the UI to connect to the backend services.
-
 #### **B. Using Dockerized MongoDB & Redis (All-in-One)**
 
 If you don't have existing databases, this setup will create everything together:
@@ -85,12 +83,12 @@ services:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
     ports:
-      - "27017:27017" # Expose Mongo port if needed
+      - "27017:27017"
 
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"   # Expose Redis port if needed
+      - "6379:6379"
 
   nodify-core:
     image: azirar/nodify-core:latest
@@ -99,7 +97,7 @@ services:
       - redis
     environment:
       MONGO_URL: "mongodb://mongo:27017/nodify"
-      ADMIN_PWD: "Admin123" # Default password, change in production!
+      ADMIN_PWD: "Admin123"
       API_URL: "http://nodify-api:1080"
       TZ: "${TZ:-Europe/Paris}"
       REDIS_URL: "redis://redis:6379"
@@ -141,28 +139,31 @@ To start the entire stack:
 docker-compose up -d
 ```
 
-After running either Docker setup, you can access the Nodify UI at `http://localhost:7821` (or the port you mapped for the UI). The backend services (`nodify-core` and `nodify-api`) will be available at the ports you mapped (e.g., `7804` and `7805`).
+After running either Docker setup, you can access the Nodify UI at `http://localhost:7821`. The backend services are available at:
+- `http://localhost:7804` (nodify-core)
+- `http://localhost:7805` (nodify-api)
 
 ## 📦 Installation
 
 Install the client package via npm:
 
 ```bash
-npm install @azirarm/nodify-node-client
+npm install nodify-node-client
 ```
 
 ## 🚀 Quick Start
 
-Here's a simple example to get you started:
+Here's a simple example to get you started using the builder pattern:
 
 ```typescript
-import { NodifyClient, Node, NodeStatus } from '@azirarm/nodify-node-client';
+import { NodifyClient, NodeStatus } from 'nodify-node-client';
 
 async function main() {
-  // 1. Create a client instance pointing to your Nodify Core instance
-  const client = new NodifyClient({
-    baseUrl: 'http://localhost:7804', // URL of your nodify-core instance
-  });
+  // 1. Create a client instance using the builder pattern
+  const client = NodifyClient.builder()
+    .withBaseUrl('http://localhost:7804')
+    .withTimeout(30000)
+    .build();
 
   try {
     // 2. Authenticate
@@ -170,7 +171,7 @@ async function main() {
     console.log('✅ Login successful');
 
     // 3. Create a new node (a structural element like a 'Page' or 'Site')
-    const newNode: Node = {
+    const newNode = {
       name: 'My First Page',
       code: 'MY_FIRST_PAGE',
       slug: 'my-first-page',
@@ -189,7 +190,7 @@ async function main() {
   } catch (error) {
     console.error('❌ An error occurred:', error);
   } finally {
-    // 5. Close the client's HTTP connections
+    // 5. Close the client
     await client.close();
   }
 }
@@ -197,103 +198,266 @@ async function main() {
 main();
 ```
 
-## ✨ Core Concepts
+## 🔧 Builder Pattern Configuration
 
-*   **Node**: Represents a structural element in your content hierarchy (e.g., a `SITE`, a `PAGE`, a `FOLDER`). Nodes can have child nodes and content nodes attached.
-*   **Content Node**: Represents the actual content itself. It can be of various types (`HTML`, `JSON`, `DATA`, `FILE`, etc.). It's where your translations and dynamic values live.
-*   **Dynamic Directives**: Nodify supports powerful directives within your content strings:
-    *   `$translate(KEY)`: Automatically replaces the directive with the translated value for the current language based on translations attached to the content node.
-    *   `$value(KEY)`: Replaces the directive with a dynamic value stored in the content node's `values` array.
-
-## 📝 Advanced Example: Creating Multilingual Content
-
-This example demonstrates creating a parent node, a child page, and an HTML content node with translations and a dynamic value.
+The client uses a builder pattern for flexible configuration:
 
 ```typescript
-import { NodifyClient, Node, ContentNode, ContentType, NodeStatus, Translation, Value } from '@azirarm/nodify-node-client';
+const client = NodifyClient.builder()
+  .withBaseUrl('https://nodify-core.azirar.ovh')  // Required
+  .withTimeout(30000)                               // Optional, default: 30000
+  .withAuthToken('your-jwt-token')                 // Optional, if you already have a token
+  .withHeader('X-Custom-Header', 'value')          // Optional, add custom headers
+  .withDefaultHeaders({                            // Optional, set multiple headers
+    'X-API-Key': 'your-api-key',
+    'X-Client-Version': '1.0.0'
+  })
+  .withAuthErrorHandler(async () => {               // Optional, handle token refresh
+    const newToken = await refreshToken();
+    return newToken;
+  })
+  .build();
+```
 
-async function createCompleteScenario() {
-  const client = new NodifyClient({ baseUrl: 'http://localhost:7804' });
+## ✨ Core Concepts
+
+- **Node**: Represents a structural element in your content hierarchy (e.g., a `SITE`, a `PAGE`, a `FOLDER`). Nodes can have child nodes and content nodes attached.
+- **Content Node**: Represents the actual content itself. It can be of various types (`HTML`, `JSON`, `PICTURE`, `STYLE`, `SCRIPT`, etc.). It's where your translations and dynamic values live.
+- **Content Types**: Available content types:
+    - `HTML` - HTML content
+    - `JSON` - JSON data
+    - `PICTURE` - Image content
+    - `STYLE` - CSS styles
+    - `SCRIPT` - JavaScript code
+    - `FILE` - Binary files
+    - `XML` - XML content
+- **Node Status**: Content lifecycle states:
+    - `SNAPSHOT` - Draft/working version
+    - `PUBLISHED` - Live/production version
+    - `ARCHIVE` - Archived content
+    - `DELETED` - Soft-deleted content
+- **Dynamic Directives**: Nodify supports powerful directives within your content strings:
+    - `$translate(KEY)`: Replaces with translated value for current language
+    - `$value(KEY)`: Replaces with dynamic value from content node's values array
+    - `$content(CODE)`: Embeds another content node (useful for including styles/scripts)
+
+## 📝 Advanced Examples
+
+### Creating a Complete Website Structure
+
+```typescript
+import { 
+  NodifyClient, 
+  NodeStatus, 
+  ContentNodeType, 
+  ContentNode 
+} from 'nodify-node-client';
+
+async function createWebsite() {
+  const client = NodifyClient.builder()
+    .withBaseUrl('http://localhost:7804')
+    .build();
+
   await client.login('admin', 'YourAdminPassword');
 
-  // 1. Create a parent node (e.g., your website)
-  const websiteNode: Node = {
-    name: 'My Multilingual Site',
+  // 1. Create a site node
+  const site = await client.saveNode({
+    name: 'My Awesome Site',
     code: 'MY_SITE',
     slug: 'my-site',
     type: 'SITE',
     status: NodeStatus.SNAPSHOT,
     defaultLanguage: 'en',
-  };
-  const savedSite = await client.saveNode(websiteNode);
+    languages: ['en', 'fr', 'es'],
+    description: 'My personal website'
+  });
 
-  // 2. Create a child page node under the website
-  const pageNode: Node = {
-    parentCode: savedSite.code,
-    name: 'Welcome Page',
-    code: 'WELCOME_PAGE',
-    slug: 'welcome',
+  // 2. Create a page under the site
+  const page = await client.saveNode({
+    parentCode: site.code,
+    name: 'About Us',
+    code: 'ABOUT_PAGE',
+    slug: 'about',
     type: 'PAGE',
-    status: NodeStatus.SNAPSHOT,
-    defaultLanguage: 'en',
-  };
-  const savedPage = await client.saveNode(pageNode);
+    status: NodeStatus.SNAPSHOT
+  });
 
-  // 3. Create HTML content attached to the page, with translations and a value
+  // 3. Create HTML content for the page
+  const content: ContentNode = {
+    parentCode: page.code,
+    type: ContentNodeType.HTML,
+    title: 'About Us Page',
+    code: 'ABOUT_HTML',
+    slug: 'about-us',
+    language: 'en',
+    status: NodeStatus.SNAPSHOT,
+    content: '<h1>About Us</h1><p>Welcome to our website!</p>'
+  };
+
+  const savedContent = await client.saveContentNode(content);
+  
+  // 4. Publish the content
+  await client.publishContentNode(savedContent.code!, true);
+  
+  console.log('✅ Website created successfully!');
+  await client.close();
+}
+```
+
+### Creating Multilingual Content with Translations
+
+```typescript
+import { 
+  NodifyClient, 
+  NodeStatus, 
+  ContentNodeType,
+  ContentNode,
+  Translation,
+  Value
+} from 'nodify-node-client';
+
+async function createMultilingualContent() {
+  const client = NodifyClient.builder()
+    .withBaseUrl('http://localhost:7804')
+    .build();
+
+  await client.login('admin', 'YourAdminPassword');
+
+  // Create translations
   const translations: Translation[] = [
     { key: 'GREETING', language: 'en', value: 'Hello' },
     { key: 'GREETING', language: 'fr', value: 'Bonjour' },
     { key: 'GREETING', language: 'es', value: 'Hola' },
+    { key: 'WELCOME', language: 'en', value: 'Welcome to our site!' },
+    { key: 'WELCOME', language: 'fr', value: 'Bienvenue sur notre site!' },
+    { key: 'WELCOME', language: 'es', value: '¡Bienvenido a nuestro sitio!' }
   ];
 
+  // Create dynamic values
   const values: Value[] = [
-    { key: 'USER_NAME', value: 'Nodify Developer' },
+    { key: 'USER_NAME', value: 'Guest' },
+    { key: 'SITE_NAME', value: 'My Awesome Site' }
   ];
 
-  const htmlContent: ContentNode = {
-    parentCode: savedPage.code,
-    type: ContentType.HTML,
-    title: 'Dynamic Welcome',
-    code: 'WELCOME_HTML',
-    slug: 'welcome-html',
+  // Create content with translations and values
+  const content: ContentNode = {
+    parentCode: 'MY_SITE',
+    type: ContentNodeType.HTML,
+    title: 'Welcome Page',
+    code: 'WELCOME_PAGE',
+    slug: 'welcome',
     language: 'en',
     status: NodeStatus.SNAPSHOT,
-    content: '<h1>$translate(GREETING), $value(USER_NAME)!</h1><p>Welcome to your Nodify site.</p>',
+    content: '<h1>$translate(GREETING), $value(USER_NAME)!</h1><p>$translate(WELCOME)</p><p>Welcome to $value(SITE_NAME)</p>',
     translations: translations,
-    values: values,
+    values: values
   };
 
-  const savedContent = await client.saveContentNode(htmlContent);
-  console.log(`✅ Content node created with code: ${savedContent.code}`);
-
-  // 4. Publish the content to make it live
-  await client.publishContentNode(savedContent.code, true);
-  console.log('✅ Content published');
-
+  const savedContent = await client.saveContentNode(content);
+  await client.publishContentNode(savedContent.code!, true);
+  
+  console.log('✅ Multilingual content created!');
   await client.close();
 }
+```
 
-createCompleteScenario();
+### Working with Images and Media
+
+```typescript
+import { NodifyClient, NodeStatus, ContentNodeType } from 'nodify-node-client';
+
+async function createImageGallery() {
+  const client = NodifyClient.builder()
+    .withBaseUrl('http://localhost:7804')
+    .build();
+
+  await client.login('admin', 'YourAdminPassword');
+
+  const images = [
+    { name: 'Photo 1', url: 'https://example.com/photo1.jpg', alt: 'Beautiful landscape' },
+    { name: 'Photo 2', url: 'https://example.com/photo2.jpg', alt: 'City skyline' }
+  ];
+
+  for (const img of images) {
+    await client.saveContentNode({
+      parentCode: 'GALLERY_NODE',
+      type: ContentNodeType.PICTURE,
+      title: img.name,
+      code: `IMG_${img.name.toUpperCase().replace(/\s+/g, '_')}`,
+      slug: img.name.toLowerCase().replace(/\s+/g, '-'),
+      language: 'en',
+      status: NodeStatus.SNAPSHOT,
+      content: img.url,
+      values: [
+        { key: 'ALT', value: img.alt }
+      ]
+    });
+  }
+
+  console.log('✅ Image gallery created!');
+  await client.close();
+}
 ```
 
 ## 📖 API Reference
 
 The client provides methods for all Nodify API endpoints, grouped by resource:
 
-*   **Authentication:** `login()`, `logout()`
-*   **Nodes:** `findAllNodes()`, `saveNode()`, `findNodeByCode()`, `publishNode()`, `deleteNode()`, and many more for managing your content structure.
-*   **Content Nodes:** `findAllContentNodes()`, `saveContentNode()`, `findContentNodeByCodeAndStatus()`, `publishContentNode()`, `deleteContentNode()`.
-*   **Users:** `findAllUsers()`, `saveUser()`, `changePassword()`.
-*   **Plugins:** `findAllPlugins()`, `savePlugin()`, `enablePlugin()`.
-*   **Feedback:** `findAllFeedback()`, `saveFeedback()`, `getContentCharts()`.
-*   **Data:** `saveData()`, `findDataByKey()`, `findDataByContentCode()`.
-*   **Locks:** `acquireLock()`, `releaseLock()`, `getLockOwner()`.
+### Authentication
+- `login(email, password)`: Authenticate and get JWT token
+- `logout()`: Clear authentication token
+- `getAuthToken()`: Get current auth token
+- `setAuthToken(token)`: Manually set auth token
 
-Refer to the source code or TypeScript definitions for the complete list of available methods and their signatures.
+### Nodes
+- `findAllNodes()`: Get all nodes
+- `saveNode(node)`: Create or update a node
+- `findNodeByCodeAndStatus(code, status)`: Find node by code and status
+- `findNodesByParentCode(code)`: Find child nodes
+- `publishNode(code)`: Publish a node
+- `deleteNode(code)`: Delete a node
+
+### Content Nodes
+- `findAllContentNodes()`: Get all content nodes
+- `saveContentNode(contentNode)`: Create or update content
+- `findContentNodeByCodeAndStatus(code, status)`: Find content by code and status
+- `publishContentNode(code, publish)`: Publish or unpublish content
+- `deleteContentNode(code)`: Delete content
+- `fillContent(code, status, payload)`: Fill content with data
+
+### Users & Roles
+- `findAllUsers()`: Get all users
+- `saveUser(user)`: Create or update user
+- `changePassword(passwordData)`: Change user password
+- `findAllUserRoles()`: Get all user roles
+- `saveUserRole(role)`: Create or update role
+
+### Feedback & Analytics
+- `findAllFeedback()`: Get all feedback
+- `saveFeedback(feedback)`: Submit feedback
+- `getContentCharts()`: Get content analytics charts
+- `getContentDisplayCharts()`: Get display analytics
+
+### Data Management
+- `saveData(data)`: Save custom data
+- `findDataByKey(key)`: Find data by key
+- `findDataByContentCode(code, params)`: Find data by content code
+
+### Lock Management
+- `acquireLock(code)`: Acquire lock on resource
+- `releaseLock(code)`: Release lock
+- `getLockOwner(code)`: Get current lock owner
+- `getAllLocks()`: Get all active locks
+
+### Utilities
+- `health()`: Check API health
+- `close()`: Close the client connections
+
+For complete API documentation, refer to the TypeScript definitions in the package or visit the [Nodify API Documentation](https://nodify.azirar.ovh/docs).
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+Contributions are welcome! Please feel free to submit issues or pull requests on [GitHub](https://github.com/AZIRARM/nodify-clients).
 
 ## 📄 License
 

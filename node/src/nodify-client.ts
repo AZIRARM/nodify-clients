@@ -30,11 +30,14 @@ import {
   NodifyError
 } from './models/nodify-models';
 
+// Ajouter l'import pour HeadersInit
+type HeadersInit = Headers | string[][] | Record<string, string>;
+
 export class NodifyClient {
   private config: NodifyClientConfig;
   private authToken: string | null = null;
   private refreshPromise: Promise<string | null> | null = null;
-  
+
   constructor(config: NodifyClientConfig) {
     this.config = config;
     this.authToken = config.authToken || null;
@@ -70,7 +73,7 @@ export class NodifyClient {
     return this.authToken;
   }
 
-  private getHeaders(includeAuth: boolean = true): HeadersInit {
+  private getHeaders(includeAuth: boolean = true): Record<string, string> {
     const headers: Record<string, string> = {
       ...this.config.defaultHeaders
     };
@@ -89,14 +92,14 @@ export class NodifyClient {
   ): Promise<T> {
     const url = `${this.config.baseUrl}${endpoint}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout || 30000);
 
     try {
       const response = await fetch(url, {
         ...options,
         headers: {
           ...this.getHeaders(),
-          ...options.headers,
+          ...options.headers as Record<string, string>,
         },
         signal: controller.signal
       });
@@ -135,11 +138,13 @@ export class NodifyClient {
       const contentType = response.headers.get('content-type') || '';
 
       if (contentType.includes('application/json')) {
-        return await response.json();
+        const data = await response.json();
+        return data as T;
       }
-      
+
       if (contentType.includes('text/plain')) {
-        return await response.text() as unknown as T;
+        const text = await response.text();
+        return text as unknown as T;
       }
 
       // For binary files (exports, etc.)
@@ -148,15 +153,15 @@ export class NodifyClient {
 
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       if (error instanceof NodifyError) {
         throw error;
       }
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
-        throw new NodifyError(`Request timeout after ${this.config.timeout}ms`);
+        throw new NodifyError(`Request timeout after ${this.config.timeout || 30000}ms`);
       }
-      
+
       throw new NodifyError(error instanceof Error ? error.message : 'Unknown error');
     }
   }
@@ -336,10 +341,10 @@ export class NodifyClient {
 
   // ============ Plugin Files ============
   async findAllPluginFiles(enabled?: boolean): Promise<PluginFile[]> {
-    const url = enabled !== undefined 
+    const url = enabled !== undefined
       ? `/v0/plugin-files/?enabled=${enabled}`
       : '/v0/plugin-files/';
-    
+
     return this.request<PluginFile[]>(url, {
       method: 'GET'
     });
@@ -420,7 +425,7 @@ export class NodifyClient {
     const params = new URLSearchParams();
     if (nodeParentCode) params.set('nodeParentCode', nodeParentCode);
     params.set('fromFile', fromFile.toString());
-    
+
     return this.request<Node[]>(`/v0/nodes/importAll?${params.toString()}`, {
       method: 'POST',
       body: JSON.stringify(nodes)
@@ -436,7 +441,7 @@ export class NodifyClient {
   async deployNodeVersion(code: string, version: string, environment?: string): Promise<boolean> {
     const params = new URLSearchParams();
     if (environment) params.set('environment', environment);
-    
+
     const url = `/v0/nodes/code/${code}/version/${version}/deploy${params.toString() ? `?${params.toString()}` : ''}`;
     return this.request<boolean>(url, {
       method: 'POST'
@@ -498,10 +503,10 @@ export class NodifyClient {
   }
 
   async getDeletedNodes(parent?: string): Promise<Node[]> {
-    const url = parent 
+    const url = parent
       ? `/v0/nodes/deleted?parent=${parent}`
       : '/v0/nodes/deleted';
-    
+
     return this.request<Node[]>(url, {
       method: 'GET'
     });
@@ -538,20 +543,20 @@ export class NodifyClient {
   }
 
   async exportAllNodes(code: string, environment?: string): Promise<Uint8Array> {
-    const url = environment 
+    const url = environment
       ? `/v0/nodes/code/${code}/export?environment=${environment}`
       : `/v0/nodes/code/${code}/export`;
-    
+
     return this.request<Uint8Array>(url, {
       method: 'GET'
     });
   }
 
   async deployNode(code: string, environment?: string): Promise<Node[]> {
-    const url = environment 
+    const url = environment
       ? `/v0/nodes/code/${code}/deploy?environment=${environment}`
       : `/v0/nodes/code/${code}/deploy`;
-    
+
     return this.request<Node[]>(url, {
       method: 'GET'
     });
@@ -757,10 +762,10 @@ export class NodifyClient {
     const urlParams = new URLSearchParams();
     if (params?.currentPage !== undefined) urlParams.set('currentPage', params.currentPage.toString());
     if (params?.limit !== undefined) urlParams.set('limit', params.limit.toString());
-    
+
     const queryString = urlParams.toString();
     const endpoint = `/v0/datas/contentCode/${code}${queryString ? `?${queryString}` : ''}`;
-    
+
     return this.request<Data[]>(endpoint, {
       method: 'GET'
     });
@@ -802,7 +807,7 @@ export class NodifyClient {
     const params = new URLSearchParams();
     if (nodeParentCode) params.set('nodeParentCode', nodeParentCode);
     params.set('fromFile', fromFile.toString());
-    
+
     return this.request<ContentNode>(`/v0/content-node/import?${params.toString()}`, {
       method: 'POST',
       body: JSON.stringify(contentNode)
@@ -818,7 +823,7 @@ export class NodifyClient {
   async deployContentNodeVersion(code: string, version: string, environment?: string): Promise<boolean> {
     const params = new URLSearchParams();
     if (environment) params.set('environment', environment);
-    
+
     const url = `/v0/content-node/code/${code}/version/${version}/deploy${params.toString() ? `?${params.toString()}` : ''}`;
     return this.request<boolean>(url, {
       method: 'POST'
@@ -863,10 +868,10 @@ export class NodifyClient {
   }
 
   async getDeletedContentNodes(parent?: string): Promise<ContentNode[]> {
-    const url = parent 
+    const url = parent
       ? `/v0/content-node/deleted?parent=${parent}`
       : '/v0/content-node/deleted';
-    
+
     return this.request<ContentNode[]>(url, {
       method: 'GET'
     });
@@ -891,20 +896,20 @@ export class NodifyClient {
   }
 
   async exportContentNode(code: string, environment?: string): Promise<Uint8Array> {
-    const url = environment 
+    const url = environment
       ? `/v0/content-node/code/${code}/export?environment=${environment}`
       : `/v0/content-node/code/${code}/export`;
-    
+
     return this.request<Uint8Array>(url, {
       method: 'GET'
     });
   }
 
   async deployContentNode(code: string, environment?: string): Promise<boolean> {
-    const url = environment 
+    const url = environment
       ? `/v0/content-node/code/${code}/deploy?environment=${environment}`
       : `/v0/content-node/code/${code}/deploy`;
-    
+
     return this.request<boolean>(url, {
       method: 'GET'
     });
@@ -1060,5 +1065,11 @@ export class NodifyClient {
     return this.request<string[]>(`/v0/slugs/exists/${slug}`, {
       method: 'GET'
     });
+  }
+
+  // Ajouter une méthode close pour fermer les connexions
+  async close(): Promise<void> {
+    // Rien à fermer pour l'instant, mais méthode présente pour compatibilité
+    return Promise.resolve();
   }
 }
