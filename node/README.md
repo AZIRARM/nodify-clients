@@ -1,8 +1,3 @@
-Parfait ! Je vais vous aider à mettre à jour la documentation README.md pour refléter les dernières modifications et la nouvelle API avec le builder pattern.
-
-## README.md mis à jour
-
-```markdown
 # nodify-node-client
 
 **Official Node.js client for Nodify Headless CMS**
