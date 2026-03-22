@@ -160,6 +160,15 @@ class NewsFeedBuilder:
             font-size: 0.85rem;
             margin-bottom: 1rem;
         }
+        .comment-count {
+            display: inline-block;
+            margin-left: 1rem;
+            color: #1e3c72;
+            font-size: 0.8rem;
+            background: #e8f0fe;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+        }
         .article-category {
             display: inline-block;
             background: #1e3c72;
@@ -239,6 +248,9 @@ class NewsFeedBuilder:
             border: 1px solid #ddd;
             border-radius: 8px;
         }
+        .comment-input input:first-child {
+            flex: 0.3;
+        }
         .comment-input button {
             padding: 0.75rem 1.5rem;
             background: #1e3c72;
@@ -253,6 +265,9 @@ class NewsFeedBuilder:
             margin: 0.5rem 0;
             border-radius: 8px;
         }
+        .comment strong {
+            color: #1e3c72;
+        }
         .footer {
             background: rgba(255,255,255,0.95);
             text-align: center;
@@ -264,6 +279,7 @@ class NewsFeedBuilder:
             .hero h1 { font-size: 2rem; }
             .hero p { font-size: 1rem; }
             .category-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+            .comment-input { flex-direction: column; }
             .modal-content { margin: 20px; padding: 1rem; }
         }
         """
@@ -301,12 +317,10 @@ class NewsFeedBuilder:
         }}
 
         async function fetchArticlesFromCategory(categoryCode) {{
-            // Récupérer d'abord les métadonnées pour avoir les codes
             const url = API_BASE_URL + '/contents/node/code/' + categoryCode + '?status=PUBLISHED';
             const response = await fetch(url);
             const articles = await response.json();
 
-            // Pour chaque article, récupérer le contenu traduit
             const articlesWithContent = [];
             for (const article of articles) {{
                 const contentUrl = API_BASE_URL + '/contents/code/' + article.code + '?payloadOnly=true&status=PUBLISHED&translation=' + currentLang;
@@ -325,6 +339,31 @@ class NewsFeedBuilder:
                 }}
             }}
             return articlesWithContent;
+        }}
+
+        async function getCommentCount(articleCode) {{
+            const url = API_BASE_URL + '/datas/content-code/' + articleCode + '/count';
+            const response = await fetch(url);
+            if (response.ok) {{
+                const count = await response.json();
+                return count;
+            }}
+            return 0;
+        }}
+
+        async function updateArticleCommentCount(articleCode) {{
+            const newCount = await getCommentCount(articleCode);
+            const articleCards = document.querySelectorAll('.article-card');
+            for (const card of articleCards) {{
+                const onclickAttr = card.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(articleCode)) {{
+                    const commentSpan = card.querySelector('.comment-count');
+                    if (commentSpan) {{
+                        commentSpan.textContent = `💬 ${{newCount}} comment${{newCount !== 1 ? 's' : ''}}`;
+                    }}
+                    break;
+                }}
+            }}
         }}
 
         async function openArticle(articleCode) {{
@@ -354,7 +393,8 @@ class NewsFeedBuilder:
                     <h4>Comments</h4>
                     <div id="comments-${{articleCode}}"></div>
                     <div class="comment-input">
-                        <input type="text" id="comment-input-${{articleCode}}" placeholder="Add a comment...">
+                        <input type="text" id="comment-user-${{articleCode}}" placeholder="Your name" value="anonymous">
+                        <input type="text" id="comment-text-${{articleCode}}" placeholder="Add a comment...">
                         <button onclick="addComment('${{articleCode}}')">Post</button>
                     </div>
                 </div>
@@ -368,9 +408,17 @@ class NewsFeedBuilder:
         }}
 
         async function addComment(articleCode) {{
-            const commentInput = document.getElementById('comment-input-' + articleCode);
-            const commentText = commentInput.value;
-            if (!commentText.trim()) return;
+            const userNameInput = document.getElementById('comment-user-' + articleCode);
+            const commentInput = document.getElementById('comment-text-' + articleCode);
+            const userName = userNameInput.value.trim() || 'anonymous';
+            const commentText = commentInput.value.trim();
+            if (!commentText) return;
+
+            const commentData = {{
+                user: userName,
+                text: commentText,
+                date: new Date().toISOString()
+            }};
 
             const url = API_BASE_URL + '/datas/';
             const response = await fetch(url, {{
@@ -380,15 +428,16 @@ class NewsFeedBuilder:
                     contentNodeCode: articleCode,
                     dataType: 'COMMENT',
                     name: 'Comment',
-                    user: 'anonymous',
+                    user: userName,
                     key: 'comment_' + Date.now(),
-                    value: commentText
+                    value: JSON.stringify(commentData)
                 }})
             }});
 
             if (response.ok) {{
                 commentInput.value = '';
                 await loadComments(articleCode);
+                await updateArticleCommentCount(articleCode);
             }}
         }}
 
@@ -399,11 +448,25 @@ class NewsFeedBuilder:
 
             const commentsDiv = document.getElementById('comments-' + articleCode);
             if (commentsDiv) {{
-                commentsDiv.innerHTML = comments.map(c => `
-                    <div class="comment">
-                        <strong>${{c.user}}</strong>: ${{c.value}}
-                    </div>
-                `).join('');
+                if (comments.length === 0) {{
+                    commentsDiv.innerHTML = '<p style="color: #999;">No comments yet. Be the first to comment!</p>';
+                }} else {{
+                    commentsDiv.innerHTML = comments.map(c => {{
+                        let commentData;
+                        try {{
+                            commentData = JSON.parse(c.value);
+                        }} catch(e) {{
+                            commentData = {{ user: c.user || 'anonymous', text: c.value }};
+                        }}
+                        return `
+                            <div class="comment">
+                                <strong>${{escapeHtml(commentData.user)}}</strong>
+                                <span style="color: #999; font-size: 0.8rem;">${{commentData.date ? new Date(commentData.date).toLocaleString() : ''}}</span>
+                                <p>${{escapeHtml(commentData.text)}}</p>
+                            </div>
+                        `;
+                    }}).join('');
+                }}
             }}
         }}
 
@@ -422,7 +485,6 @@ class NewsFeedBuilder:
             }}
         }}
 
-        // Traduire les éléments statiques de la page
         function updateStaticTranslations() {{
             const elements = document.querySelectorAll('[data-translate]');
             const translations = {{
@@ -480,6 +542,7 @@ class NewsFeedBuilder:
                     const articles = await fetchArticlesFromCategory(cat.code);
                     if (articles && articles.length > 0) {{
                         for (const article of articles) {{
+                            const commentCount = await getCommentCount(article.code);
                             allArticles.push({{
                                 code: article.code,
                                 title: article.title,
@@ -488,7 +551,8 @@ class NewsFeedBuilder:
                                 author: article.author,
                                 date: article.date,
                                 categoryName: cat.name,
-                                categoryCode: cat.code
+                                categoryCode: cat.code,
+                                commentCount: commentCount
                             }});
                         }}
                     }}
@@ -510,6 +574,7 @@ class NewsFeedBuilder:
                             <h3>${{escapeHtml(article.title)}}</h3>
                             <div class="article-meta">
                                 By <strong>${{escapeHtml(article.author)}}</strong> | ${{new Date(article.date).toLocaleDateString()}}
+                                <span class="comment-count">💬 ${{article.commentCount}} comment${{article.commentCount !== 1 ? 's' : ''}}</span>
                             </div>
                             <p>${{escapeHtml(article.summary?.substring(0, 150))}}...</p>
                             <span class="read-more">Read More →</span>
@@ -622,7 +687,6 @@ class NewsFeedBuilder:
             {"code": "POLITICS", "name": "Politics", "description": "Political news and analysis"}
         ]
 
-        # Translations pour les articles
         articles_with_translations = {
             "TECH": [
                 {
@@ -685,7 +749,6 @@ class NewsFeedBuilder:
         }
 
         for cat_data in categories_data:
-            # Create category node (name in English, no translation)
             category_node_data = {
                 "parentCode": self.categories_container["code"],
                 "name": cat_data["name"],
@@ -704,7 +767,6 @@ class NewsFeedBuilder:
             })
             print(f"  ✅ Category created: {cat_data['code']} (node: {category_node['code']})")
 
-            # Create articles directly under the category node
             cat_articles = articles_with_translations.get(cat_data["code"], [])
             for trans in cat_articles:
                 article_code = f"POST-{uuid.uuid4().hex[:12].upper()}"
@@ -803,21 +865,15 @@ class NewsFeedBuilder:
     async def create_landing_page(self):
         print("🏠 Creating landing page...")
 
-        # Traductions pour la page d'accueil
         main_translations = [
-            # EN
             {"language": "EN", "key": "MAIN_TITLE", "value": "Nodify News Feed"},
             {"language": "EN", "key": "MAIN_SUBTITLE", "value": "Stay updated with the latest news"},
             {"language": "EN", "key": "FOOTER_TEXT", "value": "Built with ❤️ using Nodify Headless CMS"},
             {"language": "EN", "key": "COPYRIGHT", "value": "© 2026 Nodify CMS. All rights reserved."},
-
-            # FR
             {"language": "FR", "key": "MAIN_TITLE", "value": "Flux d'actualités Nodify"},
             {"language": "FR", "key": "MAIN_SUBTITLE", "value": "Restez informé des dernières actualités"},
             {"language": "FR", "key": "FOOTER_TEXT", "value": "Construit avec ❤️ en utilisant Nodify Headless CMS"},
             {"language": "FR", "key": "COPYRIGHT", "value": "© 2026 Nodify CMS. Tous droits réservés."},
-
-            # ES
             {"language": "ES", "key": "MAIN_TITLE", "value": "Feed de Noticias Nodify"},
             {"language": "ES", "key": "MAIN_SUBTITLE", "value": "Manténgase actualizado con las últimas noticias"},
             {"language": "ES", "key": "FOOTER_TEXT", "value": "Construido con ❤️ usando Nodify Headless CMS"},
