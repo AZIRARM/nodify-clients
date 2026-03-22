@@ -6,12 +6,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.example</groupId>
-  <artifactId>nodify-blog-example</artifactId>
+  <artifactId>nodify-example</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>Nodify Blog Example</name>
-  <description>Blog example using Nodify Java Client with JDK 17</description>
+  <name>Nodify Example</name>
+  <description>Examples using Nodify Java Client with JDK 17</description>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
