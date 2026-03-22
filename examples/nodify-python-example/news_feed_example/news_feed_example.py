@@ -422,6 +422,37 @@ class NewsFeedBuilder:
             }}
         }}
 
+        // Traduire les éléments statiques de la page
+        function updateStaticTranslations() {{
+            const elements = document.querySelectorAll('[data-translate]');
+            const translations = {{
+                EN: {{
+                    MAIN_TITLE: 'Nodify News Feed',
+                    MAIN_SUBTITLE: 'Stay updated with the latest news',
+                    COPYRIGHT: '© 2026 Nodify CMS. All rights reserved.',
+                    FOOTER_TEXT: 'Built with ❤️ using Nodify Headless CMS'
+                }},
+                FR: {{
+                    MAIN_TITLE: 'Flux d\\'actualités Nodify',
+                    MAIN_SUBTITLE: 'Restez informé des dernières actualités',
+                    COPYRIGHT: '© 2026 Nodify CMS. Tous droits réservés.',
+                    FOOTER_TEXT: 'Construit avec ❤️ en utilisant Nodify Headless CMS'
+                }},
+                ES: {{
+                    MAIN_TITLE: 'Feed de Noticias Nodify',
+                    MAIN_SUBTITLE: 'Manténgase actualizado con las últimas noticias',
+                    COPYRIGHT: '© 2026 Nodify CMS. Todos los derechos reservados.',
+                    FOOTER_TEXT: 'Construido con ❤️ usando Nodify Headless CMS'
+                }}
+            }};
+            elements.forEach(el => {{
+                const key = el.getAttribute('data-translate');
+                if (translations[currentLang] && translations[currentLang][key]) {{
+                    el.textContent = translations[currentLang][key];
+                }}
+            }});
+        }}
+
         async function loadArticles() {{
             const grid = document.getElementById('articlesGrid');
             if (!grid) return;
@@ -505,6 +536,7 @@ class NewsFeedBuilder:
         }};
 
         document.addEventListener('DOMContentLoaded', async () => {{
+            updateStaticTranslations();
             await loadArticles();
 
             const select = document.getElementById('langSelect');
@@ -770,6 +802,28 @@ class NewsFeedBuilder:
 
     async def create_landing_page(self):
         print("🏠 Creating landing page...")
+
+        # Traductions pour la page d'accueil
+        main_translations = [
+            # EN
+            {"language": "EN", "key": "MAIN_TITLE", "value": "Nodify News Feed"},
+            {"language": "EN", "key": "MAIN_SUBTITLE", "value": "Stay updated with the latest news"},
+            {"language": "EN", "key": "FOOTER_TEXT", "value": "Built with ❤️ using Nodify Headless CMS"},
+            {"language": "EN", "key": "COPYRIGHT", "value": "© 2026 Nodify CMS. All rights reserved."},
+
+            # FR
+            {"language": "FR", "key": "MAIN_TITLE", "value": "Flux d'actualités Nodify"},
+            {"language": "FR", "key": "MAIN_SUBTITLE", "value": "Restez informé des dernières actualités"},
+            {"language": "FR", "key": "FOOTER_TEXT", "value": "Construit avec ❤️ en utilisant Nodify Headless CMS"},
+            {"language": "FR", "key": "COPYRIGHT", "value": "© 2026 Nodify CMS. Tous droits réservés."},
+
+            # ES
+            {"language": "ES", "key": "MAIN_TITLE", "value": "Feed de Noticias Nodify"},
+            {"language": "ES", "key": "MAIN_SUBTITLE", "value": "Manténgase actualizado con las últimas noticias"},
+            {"language": "ES", "key": "FOOTER_TEXT", "value": "Construido con ❤️ usando Nodify Headless CMS"},
+            {"language": "ES", "key": "COPYRIGHT", "value": "© 2026 Nodify CMS. Todos los derechos reservados."}
+        ]
+
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -788,18 +842,19 @@ class NewsFeedBuilder:
     </div>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">📰 Nodify News Feed</div>
+            <div class="logo">📰 <span data-translate="MAIN_TITLE">Nodify News Feed</span></div>
         </div>
     </nav>
     <main class="container">
         <section class="hero">
-            <h1>Nodify News Feed</h1>
-            <p>Stay updated with the latest news</p>
+            <h1 data-translate="MAIN_TITLE">Nodify News Feed</h1>
+            <p data-translate="MAIN_SUBTITLE">Stay updated with the latest news</p>
         </section>
         <div id="categoryFilters" class="category-filters"></div>
         <div id="articlesGrid" class="articles-grid"></div>
         <footer class="footer">
-            <p>&copy; 2026 Nodify CMS. Built with ❤️ using Nodify Headless CMS</p>
+            <p data-translate="COPYRIGHT">© 2026 Nodify CMS. All rights reserved.</p>
+            <p><span data-translate="FOOTER_TEXT">Built with ❤️ using Nodify Headless CMS</span></p>
         </footer>
     </main>
     <div id="articleModal" class="modal">
@@ -811,6 +866,7 @@ class NewsFeedBuilder:
     <script>$content({self.script_node['code']})</script>
 </body>
 </html>"""
+
         content_node_data = {
             "parentCode": self.site_node["code"],
             "type": "HTML",
@@ -820,8 +876,10 @@ class NewsFeedBuilder:
             "status": "SNAPSHOT",
             "environmentCode": "production",
             "description": "Main landing page for the news feed",
-            "content": html_content
+            "content": html_content,
+            "translations": main_translations
         }
+
         url = f"{self.core_url}/v0/content-node/"
         self.landing_page = await self._request("POST", url, content_node_data)
         print(f"✅ Landing page created: {self.landing_page['code']}\n")
