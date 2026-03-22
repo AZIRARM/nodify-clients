@@ -372,7 +372,7 @@ class NewsFeedBuilder:
             const commentText = commentInput.value;
             if (!commentText.trim()) return;
 
-            const url = API_BASE_URL + '/v0/datas/';
+            const url = API_BASE_URL + '/datas/';
             const response = await fetch(url, {{
                 method: 'POST',
                 headers: {{ 'Content-Type': 'application/json' }},
@@ -393,7 +393,7 @@ class NewsFeedBuilder:
         }}
 
         async function loadComments(articleCode) {{
-            const url = API_BASE_URL + '/v0/datas/contentCode/' + articleCode + '?limit=50';
+            const url = API_BASE_URL + '/datas/contentCode/' + articleCode + '?limit=50';
             const response = await fetch(url);
             const comments = await response.json();
 
