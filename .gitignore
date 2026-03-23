@@ -30,3 +30,4 @@ replay_pid*
 **/.env
 **/package-lock.json
 **/.pypirc
+**/vendor
