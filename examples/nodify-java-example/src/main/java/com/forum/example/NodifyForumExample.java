@@ -108,7 +108,7 @@ public class NodifyForumExample {
         Node site = new Node();
         site.setName(FORUM_SITE_NAME);
         site.setCode("DEV-FORUM-SITE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        site.setSlug("dev-community-forum");
+        site.setDescription("dev-community-forum");
         site.setType("SITE");
         site.setStatus(StatusEnum.SNAPSHOT);
         site.setDefaultLanguage("en");
@@ -120,7 +120,7 @@ public class NodifyForumExample {
         topicsNode.setParentCode(parentCode);
         topicsNode.setName("Programming Languages");
         topicsNode.setCode("TOPICS-NODE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        topicsNode.setSlug("programming-languages");
+        topicsNode.setDescription("programming-languages");
         topicsNode.setType("FOLDER");
         topicsNode.setStatus(StatusEnum.SNAPSHOT);
         return client.saveNode(topicsNode);

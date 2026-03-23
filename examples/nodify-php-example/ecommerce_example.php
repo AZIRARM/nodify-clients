@@ -1637,7 +1637,7 @@ echo "\n" . str_repeat("=", 60) . "\n";
 echo "NODIFY E-COMMERCE EXAMPLE - PHP Client\n";
 echo str_repeat("=", 60) . "\n\n";
 
-$builder = new EcommerceBuilder("https://nodify-core.azirar.ovh", "https://nodify-api.azirar.ovh");
+$builder = new EcommerceBuilder("http://localhost:8080", "http://localhost:1080");
 try {
     $builder->login();
     $builder->createSiteNode();

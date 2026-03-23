@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class NodifyBlogExample {
 
-    private static final String BASE_URL = "https://nodify-core.azirar.ovh";
-    private static final String API_URL = "https://nodify-api.azirar.ovh";
+    private static final String BASE_URL = "http://localhost:8080";
+    private static final String API_URL = "http://localhost:1080";
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "Admin13579++";
     private static final String BLOG_SITE_NAME = "My Tech Blog";
@@ -123,7 +123,7 @@ public class NodifyBlogExample {
         Node site = new Node();
         site.setName(BLOG_SITE_NAME);
         site.setCode("BLOG-SITE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        site.setSlug("my-tech-blog");
+        site.setDescription("my-tech-blog");
         site.setType("SITE");
         site.setStatus(StatusEnum.SNAPSHOT);
         site.setDefaultLanguage("en");

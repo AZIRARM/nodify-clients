@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class TinyTalesExample {
 
-    private static final String BASE_URL = "https://nodify-core.azirar.ovh";
-    private static final String API_URL = "https://nodify-api.azirar.ovh";
+    private static final String BASE_URL = "http://localhost:8080";
+    private static final String API_URL = "http://localhost:1080";
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "Admin13579++";
     private static final String SITE_NAME = "Tiny Tales - Stories for Children";
@@ -136,7 +136,7 @@ public class TinyTalesExample {
         Node site = new Node();
         site.setName(SITE_NAME);
         site.setCode("TINY-TALES-SITE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        site.setSlug("tiny-tales");
+        site.setDescription("tiny-tales");
         site.setType("SITE");
         site.setStatus(StatusEnum.SNAPSHOT);
         site.setDefaultLanguage("en");
@@ -696,7 +696,7 @@ public class TinyTalesExample {
         storiesNode.setParentCode(parentCode);
         storiesNode.setName("Stories");
         storiesNode.setCode("STORIES-NODE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        storiesNode.setSlug("stories");
+        storiesNode.setDescription("stories");
         storiesNode.setType("FOLDER");
         storiesNode.setStatus(StatusEnum.SNAPSHOT);
         storiesNode.setDefaultLanguage("en");
