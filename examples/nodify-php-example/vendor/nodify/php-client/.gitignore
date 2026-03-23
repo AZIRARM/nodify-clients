@@ -1,0 +1,51 @@
+# Composer
+/vendor/
+/composer.phar
+
+# IDEs
+/.idea/
+/.vscode/
+/*.code-workspace
+/.project
+/.classpath
+/.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+/var/log/
+/var/cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# PHPUnit
+/phpunit.xml
+.phpunit.result.cache
+/.phpunit/
+
+# Coverage reports
+/coverage/
+/.phpcov/
+
+# Temp files
+/tmp/
+/temp/
+/cache/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Project specific
+/examples/*.log
+!/examples/complete_scenario.php
+!/examples/quick_start.php

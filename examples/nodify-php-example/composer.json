@@ -1,0 +1,13 @@
+{
+  "name": "nodify/ecommerce-example",
+  "description": "E-commerce example using Nodify PHP Client",
+  "type": "project",
+  "require": {
+    "nodify/php-client": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nodify\\": "vendor/nodify/php-client/src/"
+    }
+  }
+}
